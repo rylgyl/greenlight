@@ -31,7 +31,6 @@ module.exports = {
     'react/prop-types': 'off', // Turn off prop-types requirement
     'react-native/no-inline-styles': 'off', // Allow inline styles in React Native
     'react-native/no-color-literals': 'off', // Allow color literals
-    '@typescript-eslint/ban-ts-comment': 'off',
   },
   settings: {
     react: {
