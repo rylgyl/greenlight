@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import SplashScreen from './src/components/SplashScreen';
 import HomeScreen from './src/components/HomeScreen';
+import CameraScreen from './src/components/CameraScreen';
+import ConfirmPictureScreen from './src/components/ConfirmPictureScreen';
 
 enableScreens();
 
@@ -23,6 +25,16 @@ const App = () => {
           name="HomeScreen"
           component={HomeScreen}
           options={{ title: 'Welcome' }}
+        />
+        <Stack.Screen
+          name="CameraScreen"
+          component={CameraScreen}
+          options={{ title: 'Take a Picture' }}
+        />
+        <Stack.Screen
+          name="ConfirmPictureScreen"
+          component={ConfirmPictureScreen}
+          options={{ title: 'Confirm Photo' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
