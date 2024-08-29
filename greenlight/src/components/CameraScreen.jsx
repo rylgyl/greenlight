@@ -57,7 +57,7 @@ const CameraScreen = ({ navigation }) => {
         isActive={true}
         photo={true}
       />
-      <Button title="Capture" onPress={takePhoto} />
+      <Button title="Capture (Center around button)" onPress={takePhoto} />
     </View>
   );
 };
