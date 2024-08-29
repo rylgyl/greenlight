@@ -7,6 +7,7 @@ import SplashScreen from './src/components/SplashScreen';
 import HomeScreen from './src/components/HomeScreen';
 import CameraScreen from './src/components/CameraScreen';
 import ConfirmPictureScreen from './src/components/ConfirmPictureScreen';
+import NameEntryScreen from './src/components/NameEntryScreen';
 
 enableScreens();
 
@@ -34,6 +35,11 @@ const App = () => {
         <Stack.Screen
           name="ConfirmPictureScreen"
           component={ConfirmPictureScreen}
+          options={{ title: 'Confirm Photo' }}
+        />
+        <Stack.Screen
+          name="NameEntryScreen"
+          component={NameEntryScreen}
           options={{ title: 'Confirm Photo' }}
         />
       </Stack.Navigator>
