@@ -1,35 +1,37 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const PHOTOS_KEY = 'USER_PHOTOS';
-
-export const storePhoto = async (photoPath, userName) => {
+// Function to store the profile (photo path, name, and location)
+export const storeProfile = async (photoPath, name, location) => {
   try {
-    const existingPhotosJSON = await AsyncStorage.getItem(PHOTOS_KEY);
-    const existingPhotos = existingPhotosJSON
-      ? JSON.parse(existingPhotosJSON)
-      : [];
-
-    const newPhoto = {
-      path: photoPath,
-      userName: userName,
-      timestamp: new Date().toISOString(),
+    const profile = {
+      name,
+      photoPath,
+      location, // Add location to the profile
     };
-
-    const updatedPhotos = [...existingPhotos, newPhoto];
-    await AsyncStorage.setItem(PHOTOS_KEY, JSON.stringify(updatedPhotos));
-
-    console.log('Photo stored successfully');
+    // Save the profile object as a string in AsyncStorage
+    await AsyncStorage.setItem('userProfile', JSON.stringify(profile));
+    console.log('Profile saved successfully:', profile);
   } catch (error) {
-    console.error('Error storing photo:', error);
+    console.error('Error saving profile:', error);
   }
 };
 
-export const getStoredPhotos = async () => {
+// Function to retrieve the stored profile (photo path, name, and location)
+export const getProfile = async () => {
   try {
-    const photosJSON = await AsyncStorage.getItem(PHOTOS_KEY);
-    return photosJSON ? JSON.parse(photosJSON) : [];
+    const profile = await AsyncStorage.getItem('userProfile');
+    return profile ? JSON.parse(profile) : null;
   } catch (error) {
-    console.error('Error retrieving photos:', error);
-    return [];
+    console.error('Error retrieving profile:', error);
+  }
+};
+
+// Function to clear the stored profile (optional)
+export const clearProfile = async () => {
+  try {
+    await AsyncStorage.removeItem('userProfile');
+    console.log('Profile cleared successfully');
+  } catch (error) {
+    console.error('Error clearing profile:', error);
   }
 };

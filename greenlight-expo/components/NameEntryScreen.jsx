@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Image } from 'react-native';
-import { storePhoto } from './StorageUtility';
+import { storeProfile } from './StorageUtility';
 
 const NameEntryScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
   const { savedPhotoPath } = route.params;
 
   const handleSubmit = async () => {
-    if (name.trim() && savedPhotoPath) {
-      await storePhoto(savedPhotoPath, name.trim()); // Store the photo and name locally
-      navigation.navigate('HomeScreen'); // Navigate to the desired screen after saving
-    } else {
-      alert('Please enter a name');
-    }
-  };
-
+  if (name.trim() && savedPhotoPath) {
+    await storeProfile(savedPhotoPath, name.trim()); // Store the profile (photo and name) locally
+    navigation.navigate('LocationSelectorScreen'); // Navigate to HomeScreen after saving
+  } else {
+    alert('Please enter a name');
+  }
+};
   return (
     <View style={styles.container}>
       <Image
