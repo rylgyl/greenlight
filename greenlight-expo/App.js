@@ -7,6 +7,7 @@ import CameraScreen from './components/CameraScreen';
 import ConfirmPictureScreen from './components/ConfirmPictureScreen';
 import NameEntryScreen from './components/NameEntryScreen';
 import LocationSelectorScreen from './components/LocationSelectorScreen';
+import ProfileScreen from './components/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
         <Stack.Screen name="ConfirmPictureScreen" component={ConfirmPictureScreen} />
         <Stack.Screen name="NameEntryScreen" component={NameEntryScreen} />
         <Stack.Screen name="LocationSelectorScreen" component={LocationSelectorScreen} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

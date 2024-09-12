@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Button, TextInput, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as Location from 'expo-location';
 import axios from 'axios';
-import { GOOGLE_PLACES_API_KEY } from '../config';
+import { GOOGLE_PLACES_API_KEY } from '../config'; // Import API key
+import { getProfile, storeProfile } from './StorageUtility';
 
 const LocationSelectorScreen = ({ navigation }) => {
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
@@ -10,18 +11,20 @@ const LocationSelectorScreen = ({ navigation }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Helper function to calculate the distance between two coordinates in kilometers
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371; // Radius of the Earth in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    0.5 - Math.cos(dLat)/2 + 
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    (1 - Math.cos(dLon))/2;
-
-  return R * 2 * Math.asin(Math.sqrt(a));
+    const R = 6371; // Radius of the Earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      0.5 - Math.cos(dLat)/2 + 
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      (1 - Math.cos(dLon))/2;
+  
+    return R * 2 * Math.asin(Math.sqrt(a));
   };
 
+  // Function to convert kilometers to miles
   const convertKmToMiles = (km) => {
     return km * 0.621371;
   };
@@ -45,6 +48,7 @@ const LocationSelectorScreen = ({ navigation }) => {
     })();
   }, []);
 
+  // Fetch the nearby places using Google Places API
   const fetchPlaces = async (lat, lng, keyword = '') => {
     setLoading(true);
     const radius = 1500; // 1.5 km radius
@@ -79,9 +83,32 @@ const LocationSelectorScreen = ({ navigation }) => {
   };
 
   const handlePlaceClick = (place) => {
-    alert(`Location set to ${place.name}`);
-    navigation.navigate('NextScreen', { selectedPlace: place });
-  };
+  // Show a confirmation alert before setting the location
+  Alert.alert(
+    'Confirm Location',
+    `Do you want to set ${place.name} as your location?`,
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Confirm',
+        onPress: async () => {
+          const profile = await getProfile(); // Get current profile data
+          if (profile) {
+            // Store profile with updated location
+            await storeProfile(profile.photoPath, profile.name, {
+              name: place.name,
+              lat: place.geometry.location.lat,
+              lng: place.geometry.location.lng,
+            });
+            alert(`Location set to ${place.name}`);
+            navigation.navigate('ProfileScreen'); // Navigate to the profile screen
+          }
+        },
+      },
+    ],
+    { cancelable: true }
+  );
+};
 
   return (
     <View style={styles.container}>
