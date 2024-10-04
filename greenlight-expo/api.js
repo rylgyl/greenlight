@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '3.210.178.84:5000', // Replace <YOUR_SERVER_IP> with your backend server's IP address.
+  baseURL: 'http://3.210.178.84:5000', // Replace <YOUR_SERVER_IP> with your backend server's IP address.
+  // baseURL: 'http://3.210.35.245:5000'
+  // baseURL: 'http://3.210.75.51:5000' <- Primary
 });
 
 export const getItems = async () => {
@@ -13,3 +15,14 @@ export const addItem = async (item) => {
   const response = await api.post('/items', item);
   return response.data;
 };
+
+/*
+
+able to post to collection when running this curl command with the port of the local server
+
+curl -X POST http://localhost:6000/items \
+-H "Content-Type: application/json" \
+-d '{"user": "swagmeout"}'
+
+
+*/

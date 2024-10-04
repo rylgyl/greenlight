@@ -31,7 +31,7 @@ const ItemSchema = new mongoose.Schema({
 
 // adding new collection to db in cluster
 // connecting to existing collection
-const Item = mongoose.model('Item', ItemSchema, '/items');
+const Item = mongoose.model('Item', ItemSchema, 'items');
 
 // API Routes
 app.get('/items', async (req, res) => {

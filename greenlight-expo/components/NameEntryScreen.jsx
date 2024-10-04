@@ -1,30 +1,40 @@
 import React, { useState} from 'react';
 import { View, TextInput, Button, StyleSheet, Image } from 'react-native';
 import { storeProfile } from './StorageUtility';
-import { getItems, addItem } from '../api';
+import { addItem } from '../api';
 
 
 const NameEntryScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
-  const [items, setItems] = useState([]);
   
   const [newItem, setNewItem] = useState('');
   const { savedPhotoPath } = route.params;
 
   const handleAddItem = async () => {
-    setNewItem('TESTTEST');
-    if (newItem.trim()) {
-      await addItem({user: newItem});
-      console.log('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG');
+    const item = 'TESTTEST';
+    try {
+      console.log('Starting handleAddItem'); // Log start of function
+      if (item.trim()) {
+        console.log('Before addItem API call'); // Log before API call
+        const response = await addItem({ user: item });
+        console.log('API call successful:', response); // Log after API call
+      } else {
+        console.log('Item is empty or invalid');
+      }
+      console.log('handleAddItem completed successfully');
+    } catch (error) {
+      console.error('Error adding item:', error); // Log any caught error
+      alert('Failed to add item');
     }
   };
+
 
 
   const handleSubmit = async () => {
   if (name.trim() && savedPhotoPath) {
     await storeProfile(savedPhotoPath, name.trim()); // Store the profile (photo and name) locally
-    navigation.navigate('LocationSelectorScreen'); // Navigate to HomeScreen after saving
     await handleAddItem();
+    navigation.navigate('LocationSelectorScreen'); // Navigate to HomeScreen after saving
   } else {
     alert('Please enter a name');
   }
