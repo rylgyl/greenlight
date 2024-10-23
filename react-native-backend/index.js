@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
-// Be careful with the password here, mongodb may fuck with you
+// Be careful with the password here
 mongoose.connect('mongodb+srv://freeand29:Ay5BMakwJz1Vu41S@cluster0.2idxo.mongodb.net/greenLightTestUser?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -28,7 +28,7 @@ db.once('open', () => {
 // Set storage engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'greenLightTestUser/'); // Ensure this directory exists
+    cb(null, 'uploads/'); // Ensure this directory exists
   },
   filename: function (req, file, cb) {
     // Generate a unique filename using the current timestamp and original name
@@ -55,6 +55,9 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
   fileFilter: fileFilter,
 });
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Define a simple schema
 const ItemSchema = new mongoose.Schema({
@@ -105,10 +108,6 @@ app.post('/items', upload.single('photo'), async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
-
-// Serve static files from the 'uploads' directory
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
