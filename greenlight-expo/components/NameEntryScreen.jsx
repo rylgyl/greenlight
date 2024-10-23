@@ -11,7 +11,7 @@ const NameEntryScreen = ({ route, navigation }) => {
   const { savedPhotoPath } = route.params;
 
   const handleAddItem = async () => {
-    const item = 'test-anuj';
+    const item = 'testTEST';
     try {
       console.log('Starting handleAddItem'); // Log start of function
       if (item.trim()) {

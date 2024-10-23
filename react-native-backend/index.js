@@ -10,7 +10,8 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://freeand29:Ay5BMakwJz1Vu41S@cluster0.2idxo.mongodb.net/greenLightUserTest?retryWrites=true&w=majority&appName=Cluster0', {
+// Be careful with the password here, mongodb may fuck with you
+mongoose.connect('mongodb+srv://freeand29:Ay5BMakwJz1Vu41S@cluster0.2idxo.mongodb.net/greenLightTestUser?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
