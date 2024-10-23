@@ -1,7 +1,8 @@
 import React, { useState} from 'react';
-import { View, TextInput, Button, StyleSheet, Image } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import { storeProfile } from './StorageUtility';
 import { addItem } from '../api';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 
 const NameEntryScreen = ({ route, navigation }) => {
@@ -9,26 +10,65 @@ const NameEntryScreen = ({ route, navigation }) => {
   
   const [newItem, setNewItem] = useState('');
   const { savedPhotoPath } = route.params;
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleAddItem = async () => {
-    const item = 'testTEST';
-    try {
-      console.log('Starting handleAddItem'); // Log start of function
-      if (item.trim()) {
-        console.log('Before addItem API call'); // Log before API call
-        const response = await addItem({ user: item });
-        console.log('API call successful:', response); // Log after API call
-      } else {
-        console.log('Item is empty or invalid');
-      }
-      console.log('handleAddItem completed successfully');
-    } catch (error) {
-      console.error('Error adding item:', error); // Log any caught error
-      alert('Failed to add item');
-    }
+  const resizeImage = async (uri) => {
+    const resizedImage = await ImageManipulator.manipulateAsync(
+      uri,
+      [{ resize: { width: 800 } }], // Adjust the width as needed
+      { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+    );
+    return resizedImage.uri;
   };
 
+  const handleAddItem = async () => {
+    try {
+      console.log('Starting handleAddItem');
 
+      if (name.trim()) {
+        console.log('Before addItem API call');
+
+        // Resize the image
+        const resizedUri = await resizeImage(savedPhotoPath);
+
+        // Create a FormData object
+        const formData = new FormData();
+        formData.append('user', name.trim());
+
+        // Append the resized photo
+        formData.append('photo', {
+          uri: resizedUri,
+          name: `photo_${Date.now()}.jpg`,
+          type: 'image/jpeg',
+        });
+
+        setIsUploading(true); // Start loading
+
+        // Call the addItem API with FormData
+        const response = await addItem(formData);
+        console.log('API call successful:', response);
+
+        if (response.success) {
+          Alert.alert('Success', 'Profile saved successfully!');
+          // Optionally, reset the form or navigate to another screen
+          setName('');
+          navigation.navigate('LocationSelectorScreen');
+        } else {
+          Alert.alert('Upload Failed', response.message || 'Failed to save profile.');
+        }
+      } else {
+        console.log('Name is empty or invalid');
+        Alert.alert('Invalid Input', 'Please enter a valid name.');
+      }
+
+      console.log('handleAddItem completed successfully');
+    } catch (error) {
+      console.error('Error adding item:', error);
+      Alert.alert('Error', 'An error occurred while saving your profile.');
+    } finally {
+      setIsUploading(false); // Stop loading
+    }
+  };
 
   const handleSubmit = async () => {
   if (name.trim() && savedPhotoPath) {
