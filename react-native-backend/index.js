@@ -77,6 +77,8 @@ app.get('/items', async (req, res) => {
   res.json(items);
 });
 
+// this posts the file path, so it can be found again locally
+// need to get the actual photo to be uploaded so it can be retrieved by another device
 app.post('/items', upload.single('photo'), async (req, res) => {
   try {
     // Access the 'user' field from the form data
