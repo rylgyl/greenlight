@@ -1,14 +1,11 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import { storeProfile } from './StorageUtility';
-import { addItem } from '../api';
+import { addItem } from '../api'; // Make sure this API method is defined correctly in your api module
 import * as ImageManipulator from 'expo-image-manipulator';
-
 
 const NameEntryScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
-  
-  const [newItem, setNewItem] = useState('');
   const { savedPhotoPath } = route.params;
   const [isUploading, setIsUploading] = useState(false);
 
@@ -50,7 +47,6 @@ const NameEntryScreen = ({ route, navigation }) => {
 
         if (response.success) {
           Alert.alert('Success', 'Profile saved successfully!');
-          // Optionally, reset the form or navigate to another screen
           setName('');
           navigation.navigate('LocationSelectorScreen');
         } else {
@@ -71,15 +67,15 @@ const NameEntryScreen = ({ route, navigation }) => {
   };
 
   const handleSubmit = async () => {
-  if (name.trim() && savedPhotoPath) {
-    await storeProfile(savedPhotoPath, name.trim()); // Store the profile (photo and name) locally
-    await handleAddItem();
-    navigation.navigate('LocationSelectorScreen'); // Navigate to HomeScreen after saving
-  } else {
-    alert('Please enter a name');
-  }
-  
-};
+    if (name.trim() && savedPhotoPath) {
+      await storeProfile(savedPhotoPath, name.trim()); // Store the profile locally
+      await handleAddItem(); // Add item to the server
+      navigation.navigate('LocationSelectorScreen'); // Navigate to the next screen after saving
+    } else {
+      Alert.alert('Input Required', 'Please enter a name and select a photo.');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -92,7 +88,7 @@ const NameEntryScreen = ({ route, navigation }) => {
         value={name}
         onChangeText={setName}
       />
-      <Button title="Save Profile" onPress={handleSubmit} />
+      <Button title="Save Profile" onPress={handleSubmit} disabled={isUploading} />
     </View>
   );
 };
@@ -105,7 +101,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 390,
-    height: 390, // Ensure the image is square
+    height: 390,
     marginBottom: 20,
     borderColor: 'gray',
     borderWidth: 1,

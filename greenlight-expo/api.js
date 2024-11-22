@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://192.168.4.47:5000' // ip address expo go sees - Anuj
-  // baseURL: 'http://10.0.0.135:5000' // ip address expo go sees - Andrew
+  //baseURL: 'http://192.168.4.47:5000' // ip address expo go sees - Anuj
+   baseURL: 'http://10.0.0.135:5000' // ip address expo go sees - Andrew
   // baseURL: 'http://3.210.178.84:5000', // Replace <YOUR_SERVER_IP> with your backend server's IP address.
   // baseURL: 'http://3.210.35.245:5000'
   // baseURL: 'http://3.210.75.51:5000' <- Primary
